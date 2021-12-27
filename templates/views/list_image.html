@@ -1,0 +1,103 @@
+{% extends "decorators/web.html" %}
+{% block content %}
+<div class="container" style="min-height:700px;">
+  <div class="sidebar col-md-2 col-sm-3">
+    <ul class="list-group sidebar-menu row">
+      <li class="list-group-item clearfix"><a href="/"><i class="fa fa-plane"></i>Tra cứu chuyến bay</a></li>
+      <li class="list-group-item clearfix"><a href="/list-khach"><i class="fa fa-user"></i>Tra cứu khách hàng</a></li>
+    </ul>
+    <div class="row" style="margin-top: 14px;">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+              Launch demo modal
+            </button>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="file" id = "input_file_upload" name="" onchange="getBase64(this);" accept="image/*">
+                    <img id="file-upload-image" height="100px" width="100px" style="display:none" src="https://cdn.onlinewebfonts.com/svg/img_510738.png" alt="your image"/>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" 
+                    id="input_submit_file"
+                    class="btn btn-primary">Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-7 ">
+    <div class="row">
+    </div>
+
+  </div>
+
+</div>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+
+var url_file_upload = "{{url_for('upload_img')}}"
+var file_upload = document.getElementById('input_file_upload')
+var img_show = document.getElementById('file-upload-image')
+function getBase64(input) {
+  return new Promise((resolve, reject) => {
+    var file = input.files[0]
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => 
+      {
+        img_show.src=reader.result
+        img_show.style="display:block;"
+        resolve(reader.result);
+      }
+    reader.onerror = error => reject(error);
+  });
+}
+
+
+$("#input_submit_file").click(function(){
+  var len = file_upload.files.length
+  if(len==0) {
+    alert("ảnh chưa upload")
+    return
+  }
+  var fileObject =file_upload.files[0]
+  
+  data={
+    'file': fileObject,
+    'lastModified'     : fileObject.lastModified,
+    'lastModifiedDate' : fileObject.lastModifiedDate,
+    'name'             : fileObject.name,
+    'size'             : fileObject.size,
+    'type'             : fileObject.type,
+    'readfile':         img_show.src
+  }
+
+  $.ajax({
+    url: url_file_upload,
+    type: 'POST',
+    data: JSON.stringify(data),
+    success: function (data, status) {
+        console.log('done');
+        console.log(data);
+    },
+    error: function (xhr, desc, err) {
+      console.log(xhr);
+      console.log("Desc: " + desc + "\nErr:" + err);
+    }
+  });
+})
+
+</script>
+{% endblock %}
