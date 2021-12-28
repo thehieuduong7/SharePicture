@@ -8,7 +8,6 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
         <link href="{{url_for('static',filename ='/assets/css/loginstyle.css')}}" rel="stylesheet" type="text/css"/>
-        <!-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
         
         <title>Login Form</title>
     </head>
@@ -112,7 +111,9 @@ $('.login-reg-panel input[type="radio"]').on('change', function() {
         $('.register-show').removeClass('show-log-panel');
     }
 });
-  
+
+//home
+var urlHome ="{{url_for('home')}}"
 //login
 var urlLogin = "{{url_for('login')}}"
 var input_usr= document.getElementById('input_username_login')
@@ -130,8 +131,11 @@ $("#input_submit_login").click(function()
 				  type: 'POST',
 				  data: JSON.stringify(data),
 				  success: function (data, status) {
-					 console.log('done');
-                     console.log(data);
+					 console.log(data);
+					 var res=JSON.parse(data)
+					 if(res['success']){
+						window.location.href = urlHome;
+					 }
 				  },
 				  error: function (xhr, desc, err) {
 				    console.log(xhr);

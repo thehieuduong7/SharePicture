@@ -1,44 +1,89 @@
 {% extends "decorators/web.html" %}
 {% block content %}
-<div class="container" style="min-height:700px;">
-  <div class="sidebar col-md-2 col-sm-3">
-    <ul class="list-group sidebar-menu row">
-      <li class="list-group-item clearfix"><a href="/"><i class="fa fa-plane"></i>Tra cứu chuyến bay</a></li>
-      <li class="list-group-item clearfix"><a href="/list-khach"><i class="fa fa-user"></i>Tra cứu khách hàng</a></li>
-    </ul>
-    <div class="row" style="margin-top: 14px;">
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-              Launch demo modal
-            </button>
-            
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <input type="file" id = "input_file_upload" name="" onchange="getBase64(this);" accept="image/*">
-                    <img id="file-upload-image" height="100px" width="100px" style="display:none" src="https://cdn.onlinewebfonts.com/svg/img_510738.png" alt="your image"/>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" 
-                    id="input_submit_file"
-                    class="btn btn-primary">Save changes</button>
-                  </div>
+
+<style type="text/css">
+  .card:hover{
+    background: rgb(56 60 203 / 80%);
+    opacity: 0.5;
+  }
+</style>
+
+<div class="container-fluid row" style="min-height:700px;">
+  <div class="col-3">
+    <div class="list-group" style="border-radius: 30px;position:fixed;">
+      <button type="button" class="list-group-item list-group-item-action active">
+        Cras justo odio
+      </button>
+      <button type="button" class="list-group-item 
+      list-group-item-action">Dapibus ac facilisis in</button>
+      <button type="button" class="list-group-item list-group-item-action">Morbi leo risus</button>
+      <button type="button" class="list-group-item list-group-item-action">Porta ac consectetur ac</button>
+      <button type="button" class="list-group-item list-group-item-action" disabled>Vestibulum at eros</button>
+        <!-- Button trigger modal -->
+      <button type="button" class="list-group-item list-group-item-action" data-toggle="modal"
+        data-target="#exampleModal">
+
+         Add new image
+      </button>
+    </div>
+    <h1>sidebar</h1>
+  </div>
+
+  <div class="col-8 ml-2">
+    <div class="row">
+      <div class="card col-md-6 col-lg-4 hover-overlay bg-img" style="height: 320px;">
+        <div
+        class="mask"
+        style="
+          background: linear-gradient(
+            45deg,
+            rgba(29, 236, 197, 0.5),
+            rgba(91, 14, 214, 0.5) 100%
+          );
+        "
+      ></div>
+        <input class="form-check-input" class="row mr-1" type="checkbox" name="anh3"
+         id="flexRadioDefault1" style="margin-left: -10px;transform: scale(1.5);">
+        <img src="..." class="card-img-top" height="215px" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Card title</h5>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div> 
+    </div>
+  </div>
+</div>
+<div class="container-fluid row" style="min-height:700px;">
+  
+  <div class="col-9 ">
+    <div class="row">
+         
+          
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" 
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input type="file" id = "input_file_upload" name="" onchange="getBase64(this);" accept="image/*">
+                  <img id="file-upload-image" height="100px" width="100px" style="display:none" src="https://cdn.onlinewebfonts.com/svg/img_510738.png" alt="your image"/>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" 
+                  id="input_submit_file"
+                  class="btn btn-primary">Save changes</button>
                 </div>
               </div>
             </div>
-    </div>
-  </div>
-  <div class="col-md-6 col-sm-7 ">
-    <div class="row">
+          </div>
+
     </div>
 
   </div>
