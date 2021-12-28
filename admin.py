@@ -33,4 +33,4 @@ class shareModelView(ModelView):
     
 admin.add_view(userModelView(UserLoginModel, db.session, name = "user"))
 admin.add_view(imgModelView(PictureModel, db.session, name = "pictur"))
-admin.add_view(shareModelView(SharePicture, db.session, name = "share"))
+admin.add_view(shareModelView(SharePictureModel, db.session, name = "share"))

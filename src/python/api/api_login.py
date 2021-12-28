@@ -1,31 +1,28 @@
 from flask import render_template, request, redirect, session, jsonify
-from flask_login.utils import logout_user
+from flask_login.utils import login_required, logout_user
+from flask_login import current_user, login_user
 from __init__ import app,my_login
 import json
 from flask_login import login_user
-from models import UserLoginModel
-from src.python.service.ServiceAuth import AuthService
+from src.python.service.Service import AuthService
 
+auSer = AuthService()
 @my_login.user_loader
-#Bỏ cả đối tượng vào biến current_user
-def user_load(user_id):
-    return UserLoginModel.query.get(user_id)
+def load_user(user_id):
+    return auSer.getByID(user_id) 
 
 @app.route("/login",methods=["POST"])
 def login():
     data = request.get_json(force=True)
     usr = data["username"]
     pwd = data["password"]
-    au = AuthService()
-    u = au.login(usr,pwd)
-    print(u)
+    u = auSer.login(usr,pwd)
     if u==None:
         res=False
     else:
-        login_user(u)
-        res=True
+        res=login_user(user=u)
     res = {
-        'success': res
+        'success': res,
     }
     return json.dumps(res)
 
@@ -36,7 +33,7 @@ def register():
     pwd = data["password"]
     return json.dumps(data)
 
-
+@login_required
 @app.route("/logout",methods=["Get"])
 def logout():
     logout_user()
@@ -45,3 +42,32 @@ def logout():
         'success': res
     }
     return json.dumps(res)
+
+@login_required
+@app.route("/userlogin/all",methods=["Get"])
+def userloginAll():
+    list = auSer.getAll()
+    userlogins=[]
+    for u in list:
+        map ={
+            'userlogin_id':u.id,
+            'fullname':u.fullname,
+            'username':u.username
+        }
+        userlogins.append(map.copy())
+    map = {
+        "userlogins":userlogins
+    }
+    return json.dumps(map)
+
+
+@login_required
+@app.route("/userlogin/search/<int:userlogin_id>",methods=["Get"])
+def userlogigsearch(userlogin_id):
+    u = auSer.getByID(userlogin_id)
+    map ={
+            'userlogin_id':u.id,
+            'fullname':u.fullname,
+            'username':u.username
+        }
+    return json.dumps(map)
