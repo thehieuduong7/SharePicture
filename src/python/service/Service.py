@@ -14,6 +14,8 @@ class AuthService():
         return UserLoginModel.query.get(int(userlogin_id))
     def getAll(self):
         return UserLoginModel.query.all()
+    def getByUsername(self,username):
+        return  UserLoginModel.query.filter(UserLoginModel.username==username).first()
     
 class PictureService():
     def is_Permission(self,userlogin_id,picture_id):
@@ -63,6 +65,13 @@ class ShareService():
         shares =SharePictureModel.query.filter(SharePictureModel.picture_id==picture_id)
         return shares
 
+    def searchAvailableUser(self,picture_id):
+        pic =PictureModel.query.get(picture_id)
+        shares = pic.shares
+        list = [sh.userlogin_id for sh in shares]
+        list.append(pic.userlogin_id)# append them id chu? picture
+        users= UserLoginModel.query.filter(UserLoginModel.id.notin_(list)).all()
+        return users
     
     
     def insertMore(self,picture_id,list_user):

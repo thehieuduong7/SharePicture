@@ -38,17 +38,9 @@ def upload_img():
 def getPictures():
     user_id = current_user.id
     pics = picSer.getByUserID(user_id)    
-    pictures = []
-    if pics:
-        for i in pics:
-            map={
-                'picture_id':i.id,
-            }
-            pictures.append(map.copy())
+    pictures = [{'picture_id':i.id}.copy() for i in pics]
     map={
         "userlogin_id":current_user.id,
-        "username":current_user.username,
-        "fullname":current_user.fullname,
         "picture_ids":pictures
     }
     return json.dumps(map)
@@ -77,58 +69,58 @@ def searchPicture(picture_id):
 def getPictureShared():
     user_id = current_user.id
     shares = shareSer.getByUserID(user_id)    
-    pictures = []
-    if shares:
-        for i in shares:
-            map={
-                'picture_id':i.picture_id,
-            }
-            pictures.append(map.copy())
+    pictures = [{ 'picture_id':i.picture_id, }.copy()  for i in shares]
     map={
         "userlogin_id":current_user.id,
-        "username":current_user.username,
-        "fullname":current_user.fullname,
         "picture_ids":pictures
     }
     return json.dumps(map)
 
 
 @login_required
-@app.route("/sharepicture/shareFor/<int:picture_id>/<int:is_full>",methods=["GET"])
-def listtShareFor(picture_id,is_full):
+@app.route("/sharepicture/shareFor/<int:picture_id>",methods=["GET"])
+def listShareFor(picture_id):
     user_id = current_user.id
-    if not not picSer.is_Permission(user_id,picture_id): return ""
-    shares = shareSer.getByUserID(picture_id)    
-    list_user = []
-    if( shares):
-        for i in shares:
-            map={
-                'userlogin_id':i.userlogin_id,
-            }
-            list_user.append(map.copy())
+    if not picSer.is_Permission(user_id,picture_id): return ""
+    shares = shareSer.searchByPicID(picture_id)    
+    userAvail = shareSer.searchAvailableUser(picture_id)
+    list_share = [{'userlogin_id':sh.userlogin_id,}.copy() for sh in shares ]  #danh sach user da share
+    list_avail = [{'userlogin_id':u.id}.copy() for u in userAvail]     #danh sach user chua duoc share
+    
     map={
+        "userlogin_id":user_id,
         "picture_id":picture_id,
-        "share_user_id":list_user
+        "share_user_id":list_share,
+        "available_user_id":list_avail
     }
     return json.dumps(map)
 
 #@login_required
 @app.route("/sharepicture/shareTo",methods=["POST","DELETE"])
 def shareTo():
-    user_id = 1#current_user.id
+    user_id = current_user.id
     data = request.get_json(force=True)
     picture_id= data['picture_id']
-    userlogin_id = data['userlogin_id']
-    
-    if(not picSer.is_Permission(user_id,picture_id)):
+    username = data['username']
+    user = auSer.getByUsername(username)
+    if(not user):
         res=False
+        mess="Username không tồn tại"
+    
+    elif(not picSer.is_Permission(user_id,picture_id)):
+        res=False
+        mess="Bạn không có quyền chia sẽ"
     else:  
         if(request.method=="POST"):
-            res = not not shareSer.insert(picture_id,userlogin_id)
+            res = not not shareSer.insert(picture_id,user.id)
+            mess = "Chia sẽ thành công" if res else "Đã chia sẽ"
         else:
-            res = not not shareSer.remove(picture_id,userlogin_id)
+            res = not not shareSer.remove(picture_id,user.id)
+            mess = "Xoá thành công" if res else "Lỗi xoá"
+
     map={
-        "success":res
+        "success":res,
+        "message": mess
     }
     return json.dumps(map)
 

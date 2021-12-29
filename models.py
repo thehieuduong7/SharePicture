@@ -38,3 +38,9 @@ class SharePictureModel(db.Model):
 
 if __name__=="__main__":
     db.create_all()
+    pic =PictureModel.query.get(3)
+    shares = pic.shares
+    list = [sh.userlogin_id for sh in (shares if not not shares else [])]
+    list.append(pic.userlogin_id)# append them id chu? picture
+    users= UserLoginModel.query.filter(UserLoginModel.id.notin_(list)).all()
+    print(list)

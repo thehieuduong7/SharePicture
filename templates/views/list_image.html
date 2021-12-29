@@ -8,7 +8,7 @@
   }
 </style>
 
-<div class="container-fluid row" style="min-height:700px;">
+<div class="row container-fluid" style="min-height:700px; width:100%;margin-top:60px;">
   <div class="col-3">
     <div class="list-group" style="border-radius: 30px;position:fixed;">
       <button type="button" class="list-group-item list-group-item-action active">
@@ -17,30 +17,38 @@
       <button type="button" class="list-group-item 
       list-group-item-action">Dapibus ac facilisis in</button>
       <button type="button" class="list-group-item list-group-item-action">Morbi leo risus</button>
-      <button type="button" class="list-group-item list-group-item-action">Porta ac consectetur ac</button>
-      <button type="button" class="list-group-item list-group-item-action" disabled>Vestibulum at eros</button>
+      <button type="button" class="list-group-item list-group-item-action" id="btn-shareToMe">
+        Share To Me
+      </button>
+      <button type="button" class="list-group-item list-group-item-action" id="btn-reset-show">
+        My Picture
+      </button>
         <!-- Button trigger modal -->
       <button type="button" class="list-group-item 
       list-group-item-action" data-toggle="modal"
         data-target="#modalAddImage">
-
          Add new image
       </button>
     </div>
-    <h1>sidebar</h1>
   </div>
 
-  <div class="col-8 ml-2">
-    <div class="row">
-      <div class="card col-md-6 col-lg-4 hover-overlay bg-img" style="height: 320px;">
-        <input class="form-check-input" class="row mr-1" type="checkbox" name="anh3"
-         id="flexRadioDefault1" style="margin-left: -10px;transform: scale(1.5);">
-        <img src="..." class="card-img-top" height="215px" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div> 
+  <div class="col-8 ml-2" >
+    <div class="row" id="container-show-card">
+      <div class="col-md-6 col-lg-4">
+        <div class="card  hover-overlay bg-img" style="height: 320px;">
+          <input class="form-check-input" class="row mr-1" type="checkbox" name="anh3"
+          id="flexRadioDefault1" style="margin-left: 3px;transform: scale(1.5);">
+          <img src="..." class="card-img-top" height="215px" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Hieu</h5>
+            <!-- list-group-item list-group-item-action -->
+            <button type="button" class="btn btn-primary" data-toggle="modal"
+              data-target="#modalDetailImage">
+                Detail
+            </button>
+          </div>
+        </div> 
+      </div>
     </div>
   </div>
 </div>
@@ -57,6 +65,7 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
         </button>
       </div>
       <div class="modal-body">
+
         <input type="file" id = "input_file_upload" name="" onchange="getBase64(this);" accept="image/*">
         <img id="file-upload-image" height="100px" width="100px" style="display:none" src="https://cdn.onlinewebfonts.com/svg/img_510738.png" alt="your image"/>
       </div>
@@ -72,10 +81,60 @@ aria-labelledby="exampleModalLabel" aria-hidden="true">
   </div>
 </div>
 
+<div class="modal fade" id="modalDetailImage" tabindex="-1" role="dialog" 
+aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detail</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-primary" role="alert"
+        style="display:none;"
+        id="alert_share">
+          This is a primary alert—check it out!
+        </div>
+        <input type="hidden" id="input_picShare" value="0">
+        <div class="form-group">
+          <label for="exampleInputEmail1"><strong>Username</strong></label>
+          <input type="text" class="form-control" 
+          id="input_user_shareTo" aria-describedby="emailHelp" 
+          placeholder="Enter username">
+          <small id="emailHelp"  style="margin-left: 6px;"
+          class="form-text text-muted">username bạn muốn chia sẽ tới</small>
+        </div>
+        <div class="form-group">
+          <label class="" for=""><strong>Đã share</strong></label>
+          <ul class="list-group" style="max-height: 200px;overflow:auto;"
+            id="container-showListUserShare"  
+          >
+            <li class="list-group-item">Cras justo odio</li>
+            <li class="list-group-item">Dapibus ac facilisis in</li>
+            <li class="list-group-item">Morbi leo risus</li>
+            <li class="list-group-item">Porta ac consectetur ac</li>
+            <li class="list-group-item">Vestibulum at eros</li>
+          </ul>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+        id="input_close_share"
+         data-dismiss="modal">Close</button>
+         <button type="button" 
+         id="input_submit_share"
+         class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
-<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 
 var url_file_upload = "{{url_for('upload_img')}}"
@@ -117,6 +176,7 @@ $("#input_submit_file").click(function(){
 
   $.ajax({
     url: url_file_upload,
+    async:false,
     type: 'POST',
     data: JSON.stringify(data),
     success: function (res, status) {
@@ -133,9 +193,232 @@ $("#input_submit_file").click(function(){
     error: function (xhr, desc, err) {
       console.log(xhr);
       console.log("Desc: " + desc + "\nErr:" + err);
-    }
+    },
+   
   });
 })
+
+const urlMyPictureListID= "{{url_for('getPictures')}}"
+
+
+
+function getMyPictureList(url){
+    clear_show()
+    $.ajax({
+      url: url,
+      async:true,
+      type: 'GET',
+      success: function (res, status) {
+          console.log('done');
+          var data=JSON.parse(res)
+          for (var pic_id of data['picture_ids']){
+            getImageDetail(pic_id['picture_id'])
+          }
+      },
+      error: function (xhr, desc, err) {
+        console.log(xhr);
+        console.log("Desc: " + desc + "\nErr:" + err);
+      },
+    });
+}
+const urlMyPictureDetail= "{{url_for('searchPicture',picture_id=0)}}"
+//default id =0 to ez replace
+function getImageDetail(picture_id){
+  $.ajax({
+    url: urlMyPictureDetail.replace('0',picture_id),
+    async:true,
+    type: 'GET',
+    success: function (res, status) {
+        console.log('done');
+        var data=JSON.parse(res)
+        showCardImage(data)
+    },
+    error: function (xhr, desc, err) {
+      console.log(xhr);
+      console.log("Desc: " + desc + "\nErr:" + err);
+    },
+  });
+}
+
+let contShow= document.getElementById('container-show-card')
+function showCardImage(data){
+  create_at= data['create_at']
+  fullname= data['fullname']
+  pic= data['pic']
+  picture_id= data['picture_id']
+  userlogin_id= data['userlogin_id']
+  username= data['username']
+  let div = document.createElement('div')
+  div.setAttribute('class','col-md-6 col-lg-4 mb-3')
+  div.innerHTML=`
+    <div class="card  hover-overlay bg-img" 
+    id="card`+picture_id+`"
+    style="height: 320px; radius">
+      <input class="form-check-input"
+      id="check_card`+picture_id+`" onclick="check_click(`+picture_id+`)"
+      class="row card_check" type="checkbox" name="`+picture_id+`"
+      id="flexRadioDefault1" style="margin-left: 3px;transform: scale(1.5);">
+      <img src="`+pic+`" class="card-img-top" id="img_card`+picture_id+`" 
+        height="215px" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">`+fullname+`</h5>
+        <!-- list-group-item list-group-item-action -->
+        <button type="button" class="btn btn-primary" 
+          data-toggle="modal" data-target="#modalDetailImage"
+          onclick="fillModalShareFor(`+picture_id+`)">
+            Share
+        </button>
+      </div>
+    </div> 
+  `
+  contShow.appendChild(div)
+}
+
+function check_click(pic_id){
+  var check=document.getElementById('check_card'+pic_id)
+  var card=document.getElementById('card'+pic_id)
+  if(check.checked==true){
+    card.style.backgroundColor="rgba(96, 99, 211, 0.8)"
+    card.style.opacity="0.5"
+  }else{
+    card.style.backgroundColor=""
+    card.style.opacity=""
+  }
+}
+
+function clear_show(){
+  contShow.innerHTML=""
+}
+
+const urlShareToMe = "{{url_for('getPictureShared')}}"
+
+let btn_reset= document.getElementById('btn-reset-show')
+btn_reset.onclick= function(){
+  getMyPictureList(urlMyPictureListID)
+  getMyPictureList(urlShareToMe)
+}
+
+const urlShareFor= "{{url_for('listShareFor',picture_id=0)}}"
+function getShareFor(pic_id){
+  var data = null
+  $.ajax({
+    url: urlShareFor.replace('0',pic_id),
+    async:false,
+    type: 'GET',
+    success: function (res, status) {
+        console.log('done');
+        if(!!res){
+          data=JSON.parse(res)
+        }
+    },
+    error: function (xhr, desc, err) {
+      console.log(xhr);
+      console.log("Desc: " + desc + "\nErr:" + err);
+    },
+  });
+  return data
+}
+let input_picShare= document.getElementById('input_picShare')
+function fillModalShareFor(pic_id){
+    var data= getShareFor(pic_id)
+    input_picShare.value=pic_id
+    loadUserShare(pic_id)
+    input_user_shareTo.value=""
+    alertShare.style.display='none'
+}
+let input_user_shareTo= document.getElementById('input_user_shareTo')
+const urlshareTo= "{{url_for('shareTo')}}"
+let alertShare = document.getElementById('alert_share')
+document.getElementById('input_submit_share').onclick= function(){
+  var user = input_user_shareTo.value.trim()
+  map={
+    "username": user,
+    "picture_id":input_picShare.value,
+  }
+  $.ajax({
+    url: urlshareTo,
+    async:false,
+    data:JSON.stringify(map),
+    type: 'Post',
+    success: function (res, status) {
+        console.log('done');
+        var data=JSON.parse(res)
+        if(!data['success']){
+          alertShare.classList.replace('alert-primary','alert-danger')
+        }else{
+          alertShare.classList.replace('alert-danger','alert-primary')
+          appendShowShareUser(map)
+          input_user_shareTo.value=""
+
+        }
+        alertShare.style.display='block'
+        alertShare.innerText=data['message']
+        setTimeout(()=>{
+          alertShare.style.display='none'
+        },5000)
+        
+    },
+    error: function (xhr, desc, err) {
+      console.log(xhr);
+      console.log("Desc: " + desc + "\nErr:" + err);
+    },
+  });
+}
+url_listUsershareFor="{{url_for('listShareFor',picture_id=0)}}"
+let showListUserShare= document.getElementById('container-showListUserShare')
+function loadUserShare(pic_id){
+  showListUserShare.innerHTML=""
+  $.ajax({
+    url: url_listUsershareFor.replace('0',pic_id),
+    async:false,
+    type: 'GET',
+    success: function (res, status) {
+        console.log('done');
+        if(!!res){
+          data=JSON.parse(res)
+          console.log(url_listUsershareFor.replace('0',pic_id))
+          share_user_id=data['share_user_id']
+          console.log(res)
+          for(var u of share_user_id){
+            var detail = getDetailUser(u['userlogin_id'])
+            appendShowShareUser(detail)
+          }
+
+        }
+    },
+    error: function (xhr, desc, err) {
+      console.log( url_listUsershareFor.replace('0',pic_id));
+      console.log("Desc: " + desc + "\nErr:" + err);
+    },
+  });
+}
+url_searchUser= "{{url_for('userlogigsearch',userlogin_id=0)}}"
+function getDetailUser(user_id){
+  var data 
+  $.ajax({
+    url: url_searchUser.replace('0',user_id),
+    async:false,
+    type: 'GET',
+    success: function (res, status) {
+        console.log('done');
+        if(!!res){
+          data=JSON.parse(res)
+        }
+    },
+    error: function (xhr, desc, err) {
+      console.log(url_searchUser.replace('0',user_id));
+      console.log("Desc: " + desc + "\nErr:" + err);
+    },
+  });
+  return data
+}
+function appendShowShareUser(data){
+  var user = data['username']
+  var li = document.createElement('li')
+  li.classList.add('list-group-item')
+  li.innerText=user
+  showListUserShare.appendChild(li)
+}
 
 </script>
 {% endblock %}
