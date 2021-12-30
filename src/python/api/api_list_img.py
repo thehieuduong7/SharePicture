@@ -25,9 +25,7 @@ def upload_img():
     data = request.get_json(force=True)
     image_64_encode= data['readfile']
     file_name= data['name']
-    response = urllib.request.urlopen(image_64_encode)
-    with open(file_name, 'wb') as f:    #check open duoc ko
-        res = picSer.insert(user_id,image_64_encode)
+    res = picSer.insert(user_id,image_64_encode) 
     res = {
         'success': res
     }
