@@ -142,7 +142,7 @@ function activeBtnSideBar(btn){
 var url_file_upload = "{{url_for('upload_img')}}"
 var file_upload = document.getElementById('input_file_upload')
 var img_show = document.getElementById('file-upload-image')
-function getBase64(input) {
+function getBase64(input) { //convert to string base64
   return new Promise((resolve, reject) => {
     var file = input.files[0]
     const reader = new FileReader();

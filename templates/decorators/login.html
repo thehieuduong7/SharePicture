@@ -57,7 +57,9 @@
 			<div class="register-show">
 				<div class="form-group">
 					<h2>REGISTER</h2>
-					<input type="text" name="input_full_name" placeholder="Full name" required>
+					<input type="text" name="input_full_name" 
+					id= "input_fullname_reg"
+					placeholder="Full name" required>
 					 <input name="input_username" id="input_username_reg"
 						type="text" placeholder="Email" required>
 						 <input type="password" name="input_password" id="input_password_reg"
@@ -150,8 +152,9 @@ var urlReg = "{{url_for('register')}}"
 var input_usr_reg= document.getElementById('input_username_reg')
 var input_pwd_reg= document.getElementById('input_password_reg')
 var input_pwd_reg_conf= document.getElementById('input_password_reg_conf')
-
+var input_fullname_reg = document.getElementById('input_fullname_reg')
 $("#input_submit_reg").click(function(){
+
 	var pwd = input_pwd_reg.value.trim()
 	var pwd_conf = input_pwd_reg_conf.value.trim()
 	if(pwd!=pwd_conf){
@@ -162,6 +165,7 @@ $("#input_submit_reg").click(function(){
 		return;
 	}
 	var data={
+		'fullname':input_fullname_reg.value.trim(),
         'username':input_usr_reg.value.trim(),
         'password':pwd
 	}
@@ -170,9 +174,14 @@ $("#input_submit_reg").click(function(){
 				  type: 'POST',
 				  data: JSON.stringify(data),
 				  success: function (data, status) {
-					 console.log('regis_done');
-                     console.log(data);
-					 window.location.href = "http://www.w3schools.com";
+					console.log(data);
+					var res=JSON.parse(data)
+					if(res['success']){
+					   window.location.href = urlHome;
+					}
+					else{
+						alert('Đăng ký thất bại!!!')
+					}
 
 				  },
 				  error: function (xhr, desc, err) {

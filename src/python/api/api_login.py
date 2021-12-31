@@ -31,7 +31,17 @@ def register():
     data = request.get_json(force=True)
     usr = data["username"]
     pwd = data["password"]
-    return json.dumps(data)
+    name = data['fullname']
+    u =auSer.register(usr,pwd,name)
+    if u==None:
+        res=False
+    else:
+        res=login_user(user=u)
+    res = {
+        'success': res,
+    }
+
+    return json.dumps(res)
 
 @login_required
 @app.route("/logout",methods=["Get"])

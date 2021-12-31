@@ -16,6 +16,12 @@ class AuthService():
         return UserLoginModel.query.all()
     def getByUsername(self,username):
         return  UserLoginModel.query.filter(UserLoginModel.username==username).first()
+    def register(self,username,password,fullname):
+        u = UserLoginModel(username=username,password=password,fullname=fullname)
+        db.session.add(u)
+        db.session.commit()
+        db.session.refresh(u)
+        return u
     
 class PictureService():
     def is_Permission(self,userlogin_id,picture_id):
