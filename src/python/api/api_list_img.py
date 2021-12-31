@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, session, jsonify
+from flask import render_template, request, url_for, session, jsonify
 from flask_login.utils import login_required
 from flask_login import current_user, login_user
 from sqlalchemy.sql.functions import user
@@ -18,14 +18,27 @@ import urllib
 picSer = PictureService()
 shareSer = ShareService()
 auSer = AuthService()
+
+def savePic(image_64_encode,file_name):
+    resource = urllib.request.urlopen(image_64_encode)
+    file_name = 'static/uploads/'+file_name
+    with open(file_name,"wb") as output:
+        output.write(resource.read())
+        output.close()
+
 @app.route("/mypicture/upload_img",methods=["POST"])
 @login_required
 def upload_img():
     user_id = current_user.id
     data = request.get_json(force=True)
     image_64_encode= data['readfile']
-    file_name= data['name']
-    res = picSer.insert(user_id,image_64_encode) 
+    file_name="userID"+str(user_id)+"_"+ data['name']
+    pic = picSer.insert(user_id,file_name) 
+    if(pic):
+        savePic(image_64_encode,pic.pic)
+        res= True
+    else:
+        res = False
     res = {
         'success': res
     }
@@ -49,11 +62,12 @@ def getPictures():
 def searchPicture(picture_id):
     user_id = current_user.id
     pic = picSer.searchByPicID(user_id,picture_id)
+    url_img =  url_for('static',filename='uploads/'+pic.pic)
     if(pic==None): return ""
     map={
         "picture_id": pic.id,
         "create_at": str(pic.create_at),
-        "pic": pic.pic,
+        "pic": url_img,
         "userlogin_id":pic.userlogin_id,
         "fullname": pic.userlogin.fullname,
         "username": pic.userlogin.username

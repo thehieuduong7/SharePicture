@@ -35,11 +35,15 @@ class PictureService():
         picture = PictureModel(userlogin_id=userlogin_id,pic=pic)
         db.session.add(picture)
         try:
+            db.session.flush()
+            db.session.refresh(picture)
+            picture.pic=str(picture.id)+picture.pic
+            db.session.merge(picture)
             db.session.commit()
-            return True
+            return picture
         except exc.SQLAlchemyError:
             db.session.rollback()
-            return False;
+            return None;
     def getByUserID(self,userlogin_id):
         # lay toan bo anh cua user
         pics= PictureModel.query.filter(PictureModel.userlogin_id==userlogin_id)
