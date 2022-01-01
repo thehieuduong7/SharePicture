@@ -19,9 +19,14 @@ picSer = PictureService()
 shareSer = ShareService()
 auSer = AuthService()
 
-def savePic(image_64_encode,file_name):
+import os
+def savePic(image_64_encode,user_id,file_name):
+    try:
+        os.makedirs("static/uploads/"+str(user_id))
+    except FileExistsError:
+        print('exist')
     resource = urllib.request.urlopen(image_64_encode)
-    file_name = 'static/uploads/'+file_name
+    file_name = 'static/uploads/'+file_name #trong file_name la "userid/pic.png"
     with open(file_name,"wb") as output:
         output.write(resource.read())
         output.close()
@@ -32,10 +37,10 @@ def upload_img():
     user_id = current_user.id
     data = request.get_json(force=True)
     image_64_encode= data['readfile']
-    file_name="userID"+str(user_id)+"_"+ data['name']
+    file_name=  data['name']
     pic = picSer.insert(user_id,file_name) 
     if(pic):
-        savePic(image_64_encode,pic.pic)
+        savePic(image_64_encode,user_id,pic.pic) #trong pic.pic la "userid/pic.png"
         res= True
     else:
         res = False

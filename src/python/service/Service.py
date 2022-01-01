@@ -37,7 +37,7 @@ class PictureService():
         try:
             db.session.flush()
             db.session.refresh(picture)
-            picture.pic=str(picture.id)+picture.pic
+            picture.pic= str(picture.userlogin_id)+"/"+str(picture.id)+"_"+picture.pic
             db.session.merge(picture)
             db.session.commit()
             return picture
