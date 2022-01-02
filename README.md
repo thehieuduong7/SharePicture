@@ -1,5 +1,5 @@
-# Management-Hotel
-Project thiên hướng lớn về Database Management System
+# Share Picture
+Project thiên hướng về RESTFUL API. 
 ## Ngôn ngữ lập trình
 Python công nghệ Flask để lập trình web, MySQL
 ## Cách cài đặt
@@ -9,6 +9,7 @@ Python công nghệ Flask để lập trình web, MySQL
 
 ### 3 Chạy file index.py và bắt đầu sử dụng -> [here](./index.py)
 
-
+## Hướng dẫn sử dụng
+### 1. file PPT -> [here](./Share%20Picture.pptx/)
 
 
