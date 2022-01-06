@@ -31,7 +31,7 @@
 			<input type="radio" name="active-log-panel" id="log-login-show">
 		</div>
 							
-		<div class="white-panel">
+		<div class="white-panel"  >
 			<div class="login-show">
                 <div class="form-group">
 					<h2>LOGIN</h2>
@@ -57,6 +57,7 @@
 			<div class="register-show">
 				<div class="form-group">
 					<h2>REGISTER</h2>
+					<div style="overflow: auto; height:320px;">
 					<input type="text" name="input_full_name" 
 					id= "input_fullname_reg"
 					placeholder="Full name" required>
@@ -67,6 +68,14 @@
 						<input type="password" name="input_password_reg_conf" 
 						id="input_password_reg_conf"
 						placeholder="Confirm Password" required> 
+						<input type="text" name="input_reg_key_e" 
+						id="input_password_reg_conf"
+						placeholder="Nhập key E" required> 
+						<input type="text" name="input_reg_key_n" 
+						id="input_password_reg_conf"
+						placeholder="Nhập key N" required> 
+
+					</div>
 						<input type="submit" class="btn btn-primary"
 						style="float: right; padding: 10px 30px;
 							float: right; background-color: #242424; 
@@ -153,10 +162,18 @@ var input_usr_reg= document.getElementById('input_username_reg')
 var input_pwd_reg= document.getElementById('input_password_reg')
 var input_pwd_reg_conf= document.getElementById('input_password_reg_conf')
 var input_fullname_reg = document.getElementById('input_fullname_reg')
+
+
+
+var input_reg_key_e= document.getElementById('input_reg_key_e')
+var input_reg_key_n = document.getElementById('input_reg_key_n')
+
 $("#input_submit_reg").click(function(){
 
 	var pwd = input_pwd_reg.value.trim()
 	var pwd_conf = input_pwd_reg_conf.value.trim()
+	var key_n= input_reg_key_n.value.trim()
+	var key_e = input_reg_key_e.value.trim()
 	if(pwd!=pwd_conf){
 		alert("Confirm fail!!!");
 		return;
@@ -167,7 +184,9 @@ $("#input_submit_reg").click(function(){
 	var data={
 		'fullname':input_fullname_reg.value.trim(),
         'username':input_usr_reg.value.trim(),
-        'password':pwd
+        'password':pwd,
+		'key_n':key_n,
+		'key_e':key_e
 	}
 			$.ajax({
 				  url: urlReg,

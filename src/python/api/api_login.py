@@ -32,6 +32,8 @@ def register():
     usr = data["username"]
     pwd = data["password"]
     name = data['fullname']
+    key_n=data['key_n']
+    key_e=data['key_e']
     u =auSer.register(usr,pwd,name)
     if u==None:
         res=False
