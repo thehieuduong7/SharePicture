@@ -28,8 +28,16 @@ def savePic(image_64_encode,user_id,file_name):
     resource = urllib.request.urlopen(image_64_encode)
     file_name = 'static/uploads/'+file_name #trong file_name la "userid/pic.png"
     with open(file_name,"wb") as output:
-        output.write(resource.read())
+        
+        
+        read = resource.read()
+        #encode cho nay (read)      convert bytes  to bytes     b'0x41/0x32'
+        enRead = read
+        
+        output.write(enRead)
         output.close()
+        
+        
 
 @app.route("/mypicture/upload_img",methods=["POST"])
 @login_required
@@ -61,14 +69,40 @@ def getPictures():
     }
     return json.dumps(map)
 
+from base64 import b64encode # or urlsafe_b64decode
+
+from urllib.error import URLError, HTTPError
+import flask
 
 @login_required
 @app.route("/mypicture/searchPicture/<int:picture_id>",methods=["GET"])
 def searchPicture(picture_id):
     user_id = current_user.id
     pic = picSer.searchByPicID(user_id,picture_id)
-    url_img =  url_for('static',filename='uploads/'+pic.pic)
     if(pic==None): return ""
+
+    url_img =  url_for('static',filename='uploads/'+pic.pic)
+    try:
+        urllib.request.urlopen
+        resource = urllib.request.urlopen(flask.request.host_url+url_img)
+        
+        read = resource.read()
+        #decode img doan nay decode(read)   convert bytes  to bytes     b'0x41/0x32'
+        decode = read
+        
+        
+        #convert byte to data urls
+        b64_mystring = b64encode(decode).decode("utf-8")
+        url_img ="data:image/png;base64,"+b64_mystring
+    except HTTPError as e:
+        print('Error code: ', e.code)
+    except URLError as e:
+        print('Reason: ', e.reason)
+
+    
+
+
+    
     map={
         "picture_id": pic.id,
         "create_at": str(pic.create_at),
