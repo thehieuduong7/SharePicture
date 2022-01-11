@@ -25,10 +25,17 @@ def savePic(image_64_encode,user_id,file_name):
         os.makedirs("static/uploads/"+str(user_id))
     except FileExistsError:
         print('exist')
-    resource = urllib.request.urlopen(image_64_encode)
-    file_name = 'static/uploads/'+file_name #trong file_name la "userid/pic.png"
-    with open(file_name,"wb") as output:
         
+    file_name = 'static/uploads/'+file_name #trong file_name la "userid/pic.png"
+
+    #luu img anh voi file_name bat dau` tu` day
+    #---------------------------------------------------------------
+    
+    # image_64_encode là "data:img/png;base64 ....."
+    resource = urllib.request.urlopen(image_64_encode)  # doc file tu link url
+    
+    
+    with open(file_name,"wb") as output:
         
         read = resource.read()
         #encode cho nay (read)      convert bytes  to bytes     b'0x41/0x32'
@@ -81,27 +88,24 @@ def searchPicture(picture_id):
     pic = picSer.searchByPicID(user_id,picture_id)
     if(pic==None): return ""
 
-    url_img =  url_for('static',filename='uploads/'+pic.pic)
+    url_img = 'static/uploads/'+pic.pic     #url trong folder
+
+
+    #----------------
     try:
-        urllib.request.urlopen
-        resource = urllib.request.urlopen(flask.request.host_url+url_img)
-        
-        read = resource.read()
-        #decode img doan nay decode(read)   convert bytes  to bytes     b'0x41/0x32'
-        decode = read
-        
-        
+        with open(url_img,"rb") as output:
+            decode = output.read()
+
         #convert byte to data urls
         b64_mystring = b64encode(decode).decode("utf-8")
         url_img ="data:image/png;base64,"+b64_mystring
     except HTTPError as e:
         print('Error code: ', e.code)
-    except URLError as e:
-        print('Reason: ', e.reason)
+    except FileNotFoundError as e:
+        print('Reason: ', e)
 
     
-
-
+    # luc nay url_img phai co dang. data_urls
     
     map={
         "picture_id": pic.id,
