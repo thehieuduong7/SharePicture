@@ -13,9 +13,12 @@
             <table class="table table-bordered mt-5 w-100">
                 <thead>
                     <tr>
-                        <th class="col-3">ID</th>
-                        <th class="col-4">Name</th>
-                        <th class="col-4">Count Share</th>
+                        <th class="col-1">ID</th>
+                        <th class="col-3">Fullname</th>
+                        <th class="col-3">Count pictures</th>
+                        <th class="col-3">Count share to me</th>
+                        <th class="col-3">Count share to everybody</th>
+
                     </tr>
                 </thead>
                 <tbody id="table">
@@ -34,7 +37,7 @@
  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
     <script type="text/javascript">
 
-        const url_statistic = "{{url_for('statisticShare')}}";
+        const url_statistic = "{{url_for('statisticApi')}}";
         // function get 
         function getStatistic(){
     		let data;
@@ -56,7 +59,7 @@
 		
 
         // Load the Visualization API and the piechart package.
-        google.load('visualization', '1.0', {'packages':['corechart']});
+        google.load('visualization', '1.0', {'packages':['bar']});
         google.setOnLoadCallback(drawChart);
     
         function drawChart() {
@@ -64,37 +67,54 @@
             var data = new google.visualization.DataTable();
             // Create columns for the DataTable
             data.addColumn('string','Name');
-            data.addColumn('number', 'Count Shares');
+            data.addColumn('number', 'Count pictures');
+            data.addColumn('number', 'Count share to me');
+            data.addColumn('number', 'Count share to everybody');
 
             data_statistic = getStatistic();
             // Create Rows with data
             for(let i of data_statistic['statistic']){
-                data.addRow([i[1],i[2]])
+                data.addRow([i.fullname,i.count_pictures,i.count_shared_to_me,i.count_share_to_everybody])
             }
             //Create option for chart
             var options = {
-                title: 'STATISTIC SHARING',
+                chart: {
+                    title: 'STATISTIC SHARING',
+                },
                 'width': 800,
-                'height': 600
-            };
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            precision: 0
+                        }
+                    }]
+                }
 
+
+              };
             // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-            chart.draw(data, options);
+            var chart = new google.charts.Bar(document.getElementById('chart_div'));
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+
         }
 
         function updateTable(data){
             let table = document.getElementById('table');
             table.innerHTML=""
             for (let i of data){
-                let id = i[0];
-                let name = i[1];
-                let countShare =i[2];
+                let id = i['id'];
+                let name = i['fullname'];
+                let count_pictures =i['count_pictures'];
+                let count_shared_to_me = i['count_shared_to_me']
+                let count_share_to_everybody = i['count_share_to_everybody']
+
                 let div= document.createElement("tr")
                 content=`
     			<td scope="row">`+id+`</td>
                 <td style="">`+name+`</td>
-                <td style="">`+countShare+`</td>
+                <td style="">`+count_pictures+`</td>
+                <td style="">`+count_shared_to_me+`</td>
+                <td style="">`+count_share_to_everybody+`</td>
     		    `
     		    div.innerHTML= content
                 table.appendChild(div)
