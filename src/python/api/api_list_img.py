@@ -1,7 +1,6 @@
-from flask import render_template, request, url_for, session, jsonify
+from flask import request, url_for, session, jsonify
 from flask_login.utils import login_required
 from flask_login import current_user, login_user
-from sqlalchemy.sql.functions import user
 from __init__ import app
 import json
 

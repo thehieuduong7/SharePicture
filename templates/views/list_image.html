@@ -36,6 +36,12 @@
        <i class="fa fa-download"></i>
         Save
       </button>
+      <button type="button" class="list-group-item list-group-item-action"
+        id="btn-statistic"
+      >
+      <i class="fa fa-book"></i>
+        Statistic
+     </button>
     </div>
   </div>
 
@@ -502,6 +508,9 @@ document.getElementById('btn-selectAll').onclick=function(){
   selectAll=!selectAll
 }
 
+document.getElementById('btn-statistic').onclick=()=>{
+  location.href="{{url_for('statistic')}}"
+}
 
 
 </script>

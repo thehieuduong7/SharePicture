@@ -1,5 +1,6 @@
-from models import *
+from models import UserLoginModel,PictureModel,SharePictureModel,db
 from sqlalchemy import exc
+from sqlalchemy.sql.expression import func
 
 
 class AuthService():
@@ -120,7 +121,20 @@ class ShareService():
         except exc.SQLAlchemyError:
             db.session.rollback()
             return False;
-        
 
+ 
+class StatisticService():
+    def getStatisticShared(self):
+        return db.session.query(
+                SharePictureModel.userlogin_id, 
+                func.count('*').label("total_counts_share")
+            ).group_by(
+                SharePictureModel.userlogin_id
+            ).all()
+            
+
+if __name__=='__main__':
+    a= StatisticService().getStatisticShared()
+    print(a)
 
     

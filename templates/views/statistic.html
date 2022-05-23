@@ -1,0 +1,106 @@
+{% extends "decorators/web.html" %}
+{% block content %}
+
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="row">
+            <div class="" style="justify-content:center;display:flex">
+                <h1 class="display-1" style="margin-bottom: 20px; font-weight:bold; font-size:40px;
+                    color:#192a56">STATISTIC SHARE</h1>
+            </div>
+            
+            <table class="table table-bordered mt-5 w-100">
+                <thead>
+                    <tr>
+                        <th class="col-3">ID</th>
+                        <th class="col-4">Name</th>
+                        <th class="col-4">Count Share</th>
+                    </tr>
+                </thead>
+                <tbody id="table">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="row mt-5" id="chart_div">
+
+        </div>
+    </div> 
+ </div>    
+
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+ <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+        const url_statistic = "{{url_for('statisticShare')}}";
+        // function get 
+        function getStatistic(){
+    		let data;
+    		$.ajax({
+  			  url: url_statistic,
+  			  type: 'get',
+  			  success: function (res, status) {
+  				 console.log(res)
+  				 data=JSON.parse(res)
+  			  },
+  			  error: function (xhr, desc, err) {
+  			    console.log(xhr);
+  			    console.log("Desc: " + desc + "\nErr:" + err);
+  			  },
+  			  async: false
+  			});
+    		return data
+    	}
+		
+
+        // Load the Visualization API and the piechart package.
+        google.load('visualization', '1.0', {'packages':['corechart']});
+        google.setOnLoadCallback(drawChart);
+    
+        function drawChart() {
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            // Create columns for the DataTable
+            data.addColumn('string','Name');
+            data.addColumn('number', 'Count Shares');
+
+            data_statistic = getStatistic();
+            // Create Rows with data
+            for(let i of data_statistic['statistic']){
+                data.addRow([i[1],i[2]])
+            }
+            //Create option for chart
+            var options = {
+                title: 'STATISTIC SHARING',
+                'width': 800,
+                'height': 600
+            };
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+
+        function updateTable(data){
+            let table = document.getElementById('table');
+            table.innerHTML=""
+            for (let i of data){
+                let id = i[0];
+                let name = i[1];
+                let countShare =i[2];
+                let div= document.createElement("tr")
+                content=`
+    			<td scope="row">`+id+`</td>
+                <td style="">`+name+`</td>
+                <td style="">`+countShare+`</td>
+    		    `
+    		    div.innerHTML= content
+                table.appendChild(div)
+            }
+        }
+        updateTable(getStatistic()['statistic'])
+    </script>
+
+{% endblock %}
