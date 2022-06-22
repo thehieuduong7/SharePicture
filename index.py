@@ -4,7 +4,6 @@ from __init__ import app
 from src.python.api.api_login import *
 from src.python.api.api_list_img import *
 from src.python.api.api_statistic import *
-from admin import *
 from flask_login import current_user, login_user
 
 
