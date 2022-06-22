@@ -14,7 +14,7 @@
     <body>
 	<!-- <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> -->
 	<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
-<!------ Include the above in your HEAD tag ---------->
+	<!------ Include the above in your HEAD tag ---------->
 
 <div class="login-reg-panel">
 		<div class="login-info-box">
@@ -84,7 +84,7 @@
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 
 <script>
-
+//javacript
 //change login to register
     $(document).ready(function(){
     $('.login-info-box').fadeOut();
@@ -138,7 +138,7 @@ $("#input_submit_login").click(function()
 						window.location.href = urlHome;
 					 }
 					 else{
-						 alert('Nhập sai tài khoản hoặc mật khẩu!')
+						 alert('Username or password incorrect!!!')
 					 }
 				  },
 				  error: function (xhr, desc, err) {
@@ -166,7 +166,7 @@ $("#input_submit_reg").click(function(){
 		alert("Confirm fail!!!");
 		return;
 	}
-	if(!confirm("Bạn chắc chắn muốn tạo tài khoản???")){
+	if(!confirm("Make sure create account??")){
 		return;
 	}
 	var data={
@@ -185,7 +185,7 @@ $("#input_submit_reg").click(function(){
 					   window.location.href = urlHome;
 					}
 					else{
-						alert('Đăng ký thất bại!!!')
+						alert('Create fail!!!')
 					}
 				  },
 				  error: function (xhr, desc, err) {

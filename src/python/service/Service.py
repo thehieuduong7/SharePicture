@@ -54,15 +54,12 @@ class PictureService():
             return None
 
     def getByUserID(self, userlogin_id):
-        # lay toan bo anh cua user
         pics = PictureModel.query.filter(
             PictureModel.userlogin_id == userlogin_id)
         return pics
 
     def searchByPicID(self, userlogin_id, picture_id):
-        # lay thong tin cua anh duoc chia se toi user
         u = AuthService().getByID(userlogin_id)
-        # tim trong list anh da su hu
         for pic in u.pictures:
             if(pic.id == picture_id):
                 return pic
